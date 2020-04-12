@@ -24,14 +24,17 @@ function Map({ latlng, locations, mode = 'REMOVE' }) {
   const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
+    // this effect initialiases the map
     createMap(mapRef, latlng);
   }, []);
 
   useEffect(() => {
-    // when we get new locations, add markers
-    const markers = addMarkers(markerGroupRef, locations);
+    // this effect responds to the loading of new locations
+    const visibleLocations = locations.filter((l) => l.visible);
 
-    // createTimeline(mapRef, locations);
+    const markers = addMarkers(markerGroupRef, visibleLocations);
+
+    createTimeline(mapRef, locations);
 
     // TODO make this smarter, pan to center of markers
     if (initialLoad) {

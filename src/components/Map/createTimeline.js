@@ -1,53 +1,64 @@
+import mapService from '../../services/map.service';
+
 /*global L*/
 export default (mapRef, locations) => {
   if (locations.length === 0) {
     return;
   }
   const convertLocationToTimelineData = function (locations) {
-    return [
-      {
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            properties: {
-              start: '1970-01-01',
-              end: '2014-12-04',
-            },
-            geometry: {},
-          },
-        ],
-      },
-    ];
+    const features = locations.map((location) => {
+      return {
+        type: 'Feature',
+        properties: {
+          id: location.id,
+          start: Number(location.timestampMs),
+          end: Number(location.timestampMs) + 1000,
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [location.latitudeE7, location.longitudeE7],
+        },
+      };
+    });
+
+    return {
+      type: 'FeatureCollection',
+      features: features,
+    };
   };
 
   const data = convertLocationToTimelineData(locations);
 
-  const getInterval = function (location) {
-    // location data only has a timestampe, so we'll use that as a "start"
-    // and the "end" will be that + 1000
+  const getInterval = function (data) {
     return {
-      start: location.timestampMs,
-      end: location.timestampMs + 1000,
+      start: data.properties.start,
+      end: data.properties.end,
     };
   };
 
-  const timelineControl = L.timelineSliderControl({
-    formatOutput: function (date) {
-      return new Date(date).toString();
-    },
-  });
+  function onTimelineChanged(timeline) {
+    const displayed = timeline.getLayers();
+    mapService.filterLocationsByTime(displayed);
+  }
 
-  // !TODO tiemline errors here during construction
-  const timeline = L.timeline(data, {
-    getInterval: getInterval,
-    pointToLayer: function (location, latlng) {
-      console.log(location);
-      console.log(latlng);
-    },
-  });
+  if (!mapService.getSliderControl()) {
+    const slider = L.timelineSliderControl({
+      formatOutput: function (date) {
+        return new Date(date).toString();
+      },
+    });
 
-  timelineControl.addTo(mapRef.current);
-  timelineControl.addTimelines(timeline);
-  timeline.addTo(mapRef.current);
+    mapRef.current.addControl(slider);
+    mapService.setSliderControl(slider);
+
+    const timeline = L.timeline(data, {
+      getInterval: getInterval,
+    });
+    timeline.addTo(mapRef.current);
+    slider.addTimelines(timeline);
+
+    timeline.on('change', function (e) {
+      onTimelineChanged(e.target);
+    });
+  }
 };

@@ -64,11 +64,13 @@ export default (mapRef, latlng) => {
     if (isSliderClick(e) || isMarkerClick(e)) {
       return;
     }
+    const slider = mapService.getSliderControl();
+
     // TODO only allow this on add page
     const location = {
       id: uuidv4(),
       add: true,
-      timestampMs: Date.now(),
+      timestampMs: slider.time,
       latitudeE7: e.latlng.lat,
       longitudeE7: e.latlng.lng,
     };

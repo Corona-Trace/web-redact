@@ -10,6 +10,7 @@ const _places = new BehaviorSubject<any[]>([]);
 let _mapRef;
 let _markerGroupRef;
 let _latlng;
+let _sliderControl;
 
 // TODO  needs to be configurable
 const startDate = new Date(2020, 0, 1, 0, 0, 0); // month is zero based
@@ -21,10 +22,6 @@ const endTimestampMs = endDate.getTime();
 function init(mapRef, latlng) {
   _mapRef = mapRef;
   _latlng = latlng;
-}
-
-function setMarkerGroupRef(markerGroupRef) {
-  _markerGroupRef = markerGroupRef;
 }
 
 function loadSavedState() {
@@ -42,6 +39,27 @@ function loadSavedState() {
     const places: any[] = savedPlaces;
     _places.next(places);
   }
+}
+
+function filterLocationsByTime(locations) {
+  // TODO update markers on the map
+  if (locations.length > 0) {
+    console.log(locations);
+  }
+
+  const visibleIds = locations.map((location) => {
+    return location.feature.properties.id;
+  });
+
+  const currentLocations = _locations.value;
+
+  const visibleLocations = currentLocations.map((location) => {
+    return {
+      ...location,
+      visible: visibleIds.includes(location.id),
+    };
+  });
+  _locations.next(visibleLocations);
 }
 
 /**
@@ -119,15 +137,22 @@ const service = {
   addSelected,
   addPlaces,
   deleteSelected,
+  filterLocationsByTime,
   init,
   loadSavedState,
   markForRemoval,
   save,
-  setMarkerGroupRef,
+  setMarkerGroupRef: (markerGroupRef) => {
+    _markerGroupRef = markerGroupRef;
+  },
+  setSliderControl: (sliderControl) => {
+    _sliderControl = sliderControl;
+  },
   locations$: _locations.asObservable(),
   places$: _places.asObservable(),
   getMapRef: () => _mapRef,
   getMarkerGroupRef: () => _markerGroupRef,
+  getSliderControl: () => _sliderControl,
 };
 
 export default service;

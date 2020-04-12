@@ -29,14 +29,19 @@ const P = styled.p`
 `;
 
 function Sidebar({ children, locations }) {
-  const sorted = locations.sort((a, b) => b.timestampMs - a.timestampMs);
+  const visibleLocations = locations.filter((l) => l.visible);
+  const sorted = visibleLocations.sort((a, b) => b.timestampMs - a.timestampMs);
+
+  const totalCount = locations.length;
+  const visibleCount = sorted.length;
 
   return (
     <Wrapper>
       <Box>{children}</Box>
       <Box>
         <LocationContainer>
-          <P>{sorted.length} locations </P>
+          <P>Total locations ({totalCount}) </P>
+          <P>Current locations ({visibleCount}) </P>
           {sorted.map((location, idx) => (
             <Location key={idx} location={location} />
           ))}

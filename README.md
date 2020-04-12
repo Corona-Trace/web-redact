@@ -49,16 +49,26 @@ Loads data from GTO into the app.
 
 Currently we just save data to Local Storage.
 When the app is loaded, we check local storage for data and load any found.
-When the user deletes items they are not curently saved straigh away - they need to press save.
-Thinking about it, we should probably just save data automatically; when a file is loaded and when locations are deleted.
 
 # Limitations
 
-- Currently only one month (GTO file) can be loaded at time; loading another month erases previous data.
-  This will be first thing to fix.
 - It's not possible to undo deleting of information
+
+# TODO
+
+- get timeline working
+
+  - only show markers for current time
+  - when addming markers, use current time
+
+- make it possible to delete locations by deleting places?
+- make responsive
+- use same Map for Add/Remove?
+- show popup when click on marker that shows some details?
+- highlight marker when click on location on right?
 
 # Useful Links
 
 - https://leafletjs.com/
 - http://leaflet.github.io/Leaflet.draw/docs/leaflet-draw-latest.html
+- https://github.com/skeate/Leaflet.timeline
