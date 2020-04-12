@@ -41,7 +41,7 @@ export default (mapRef, latlng) => {
     const location = {
       id: uuidv4(),
       add: true,
-      timestampMs: new Date(),
+      timestampMs: Date.now(),
       latitudeE7: e.latlng.lat,
       longitudeE7: e.latlng.lng,
     };
