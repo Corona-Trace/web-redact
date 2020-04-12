@@ -2,14 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
 import createMap from './createMap';
-import createTimeline from './createTimeline';
+import createTimeline from './createTimeline'; // TODO does not work
 import addMarkers from './addMarkers';
 
 // TODO
-// * save state to local storage
-// * count of deleted
+// * count of deleted?
 // * undo? - or just reset back to initial state?
-// * add place info and display
 // * add ability to add locations.
 
 const MapContainer = styled.div`

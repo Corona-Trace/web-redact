@@ -18,10 +18,12 @@ function App() {
     // listen for new locations, they will arrive here when we load a file
     mapService.locations$.subscribe((locations) => {
       setLocations(locations);
+      mapService.save();
     });
 
     mapService.places$.subscribe((places) => {
       setPlaces(places);
+      mapService.save();
     });
   }, []);
 

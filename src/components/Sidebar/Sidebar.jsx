@@ -35,11 +35,6 @@ function Sidebar({ history, locations }) {
   const noneToDelete = locations.filter((l) => l.remove === true).length === 0;
   const sorted = locations.sort((a, b) => b.timestampMs - a.timestampMs);
 
-  const onSave = () => {
-    const uuid = mapService.save();
-    history.push(`/${uuid}`);
-  };
-
   return (
     <Wrapper>
       <Box>
@@ -50,7 +45,6 @@ function Sidebar({ history, locations }) {
         >
           Delete
         </Button>
-        <Button onClick={onSave}>Save</Button>
       </Box>
       <Box>
         <LocationContainer>
