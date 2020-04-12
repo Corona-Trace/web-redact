@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 // this file is JS because I could not get leaflet to work with TS
 import mapService from '../../services/map.service';
-
 import { addMarker } from './addMarkers';
 
 /*global L*/
@@ -35,8 +34,36 @@ export default (mapRef, latlng) => {
     },
   });
 
+  function isSliderClick(e) {
+    // check to see if this click event originated on the timeline slider control
+    if (e.originalEvent) {
+      if (e.originalEvent.toElement) {
+        if (e.originalEvent.toElement.className.indexOf('leaflet-control-layers') > -1) {
+          return true;
+        }
+        if (e.originalEvent.toElement.className.indexOf('time-slider') > -1) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function isMarkerClick(e) {
+    if (e.originalEvent) {
+      if (e.originalEvent.toElement) {
+        if (e.originalEvent.toElement.className.indexOf('leaflet-marker-icon') > -1) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   function onMapClick(e) {
-    // TODO implement add marker
+    if (isSliderClick(e) || isMarkerClick(e)) {
+      return;
+    }
     // TODO only allow this on add page
     const location = {
       id: uuidv4(),
