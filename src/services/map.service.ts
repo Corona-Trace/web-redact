@@ -17,19 +17,17 @@ const endTimestampMs = endDate.getTime();
 function loadSavedState() {
   // for now we just load whatever is in localstorage
   // in the future we might instead load this from the server using a unique ID that allows the user to edit etc
-  const uuid = localStorageService.getItem('uuid');
-  if (uuid) {
-    const savedLocations = localStorageService.getItem('locations');
-    if (savedLocations) {
-      const locations: any[] = savedLocations;
-      _locations.next(locations);
-    }
 
-    const savedPlaces = localStorageService.getItem('places');
-    if (savedPlaces) {
-      const places: any[] = savedPlaces;
-      _places.next(places);
-    }
+  const savedLocations = localStorageService.getItem('locations');
+  if (savedLocations) {
+    const locations: any[] = savedLocations;
+    _locations.next(locations);
+  }
+
+  const savedPlaces = localStorageService.getItem('places');
+  if (savedPlaces) {
+    const places: any[] = savedPlaces;
+    _places.next(places);
   }
 }
 
@@ -37,25 +35,28 @@ function loadSavedState() {
  * Save the current state to local storage
  */
 function save() {
-  let uuid;
-  if (!localStorageService.getItem('uuid')) {
-    uuid = uuidv4();
-    localStorageService.setItem('uuid', uuid);
+  if (_locations.value.length > 0) {
+    localStorageService.setItem('locations', _locations.value);
   }
-  localStorageService.setItem('locations', _locations.value);
-  localStorageService.setItem('places', _places.value);
-
-  return uuid;
+  if (_places.value.length > 0) {
+    localStorageService.setItem('places', _places.value);
+  }
 }
 
 function addLocations(data) {
+  const currentLocations = _locations.value;
   const locations = locationService.extractLocations(data, startTimestampMs, endTimestampMs);
-  _locations.next(locations);
+
+  const combined = [...currentLocations, ...locations];
+
+  _locations.next(removeDuplicates(combined, 'id'));
 }
 
 function addPlaces(data) {
+  const currentPlaces = _places.value;
   const places = placesService.extractPlaces(data, startTimestampMs, endTimestampMs);
-  _places.next(places);
+  const combined = [...currentPlaces, ...places];
+  _places.next(removeDuplicates(combined, 'placeId'));
 }
 
 function markForRemoval(ids) {
@@ -75,6 +76,11 @@ function deleteSelected() {
   const currentLocations = _locations.value;
   const withoutDeleted = currentLocations.filter((l: any) => l.remove !== true);
   _locations.next(withoutDeleted);
+}
+
+function removeDuplicates(array: any[], key: string) {
+  // each place/location gets a unique ID when we extract it, use this
+  return array.filter((v, i, a) => a.findIndex((t) => t[key] === v[key]) === i);
 }
 
 const service = {

@@ -25,6 +25,9 @@ function App() {
       setPlaces(places);
       mapService.save();
     });
+
+    // for now always load saved state, in the future only do this if user is visiting their own URL?
+    mapService.loadSavedState();
   }, []);
 
   return (

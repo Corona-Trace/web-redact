@@ -29,7 +29,7 @@ function FileControl({ onFileLoaded }) {
   return (
     <div>
       <input type="file" id="upload-file" name="file" onChange={(e) => handleChange(e)} hidden />
-      <Button htmlFor="upload-file">Import to Corona Trace</Button>
+      <Button htmlFor="upload-file">Import Goole Takeout</Button>
     </div>
   );
 }
