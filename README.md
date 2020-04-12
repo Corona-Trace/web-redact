@@ -1,68 +1,64 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Built with
 
-## Available Scripts
+Built with [Create React App](CRA.md), React Hooks, RxJS and Leaflet.
 
-In the project directory, you can run:
+Leaflet are included as script / style tags in head in `index.html`.
+I've used this approach as I had some issues getting Leaflet to work when I tried import npm installed modules.
 
-### `yarn start`
+# Google Take Out Data
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+For many people the default Google Take Out Data will be huge - mine for example is 130MB for 4 years of data.
+The aim is for users to edit data locally before they send to our servers, but the limit for Local Storage is 10MB.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Therefore, instead, we should get the user to import just the data for specific months e.g. January and onwards.
+The size of these files is much more manageable and easily within the limits of local storage.
+This also reinforces that we only want data for the purposes of COVID-19.
 
-### `yarn test`
+The JSON structure for the monthly files is slighty different. The code will support both.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# General Code Structure
 
-### `yarn build`
+- Pages act as the root of each route (page!)
+- Components are used to construct pages
+- Services contain the majority of the logic.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Map.Service
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+This is the core service.
+It's responsible for orchestrating other services and saving / loading data.
+When new data is loaded we emit it on the locations$ and places$ observables.
+The App.jsx components observces these obserables and passes any new data down the tree to other components.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Location.Service
 
-### `yarn eject`
+This contains the logic for extracting location data from the GTO file.
+We extract latlng and a timestamp and genearte a unique key.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Places.Service
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Very similar to location.service, but it extracts more detailed place data.
+We ony extract data that has a high confidence.
+There is now way I can see to easily distinguish between residential and business premises.
+However each place has a placeId, which we might be able to send to the placesAPI to get more detailed info.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## File.Service
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Loads data from GTO into the app.
 
-## Learn More
+## Saving / Loading
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Currently we just save data to Local Storage.
+When the app is loaded, we check local storage for data and load any found.
+When the user deletes items they are not curently saved straigh away - they need to press save.
+Thinking about it, we should probably just save data automatically; when a file is loaded and when locations are deleted.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Limitations
 
-### Code Splitting
+- Currently only one month (GTO file) can be loaded at time; loading another month erases previous data.
+  This will be first thing to fix.
+- It's not possible to undo deleting of information
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+# Useful Links
 
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- https://leafletjs.com/
+- http://leaflet.github.io/Leaflet.draw/docs/leaflet-draw-latest.html
