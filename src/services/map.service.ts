@@ -72,10 +72,22 @@ function markForRemoval(ids) {
   _locations.next([...updateLocations]);
 }
 
+/**
+ * Marks the locations the user selected for removal as deleted
+ * These items no longer show up in the map or location list
+ */
 function deleteSelected() {
   const currentLocations = _locations.value;
   const withoutDeleted = currentLocations.filter((l: any) => l.remove !== true);
   _locations.next(withoutDeleted);
+}
+
+/**
+ * Marks the locations the user selected for addition as added
+ * These items will be saved
+ */
+function addSelected() {
+  const currentLocations = _locations.value;
 }
 
 function removeDuplicates(array: any[], key: string) {
@@ -85,6 +97,7 @@ function removeDuplicates(array: any[], key: string) {
 
 const service = {
   addLocations,
+  addSelected,
   addPlaces,
   deleteSelected,
   loadSavedState,

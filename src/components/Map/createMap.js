@@ -1,5 +1,7 @@
 import mapService from '../../services/map.service';
 
+import { addMarker } from './addMarkers';
+
 /*global L*/
 export default (mapRef, markerGroupRef, latlng) => {
   const drawControl = new L.Control.Draw({
@@ -29,6 +31,18 @@ export default (mapRef, markerGroupRef, latlng) => {
     },
   });
 
+  function onMapClick(e) {
+    // TODO implement add marker
+    // TODO only allow this on add page
+    // const mp = new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(mapRef.current);
+    // mp.bindPopup(
+    //   '<a style="cursor:pointer" onclick=\'removeMarker("' +
+    //     mp._leaflet_id +
+    //     '")\'>{{ i18n "remove" }}</a>',
+    // );
+    // markers[mp._leaflet_id] = mp;
+  }
+
   mapRef.current = L.map('map', {
     center: [latlng.lat, latlng.lng],
     zoom: 13,
@@ -53,4 +67,6 @@ export default (mapRef, markerGroupRef, latlng) => {
     });
     mapService.markForRemoval(locationIdsToRemove);
   });
+
+  mapRef.current.on('click', onMapClick);
 };

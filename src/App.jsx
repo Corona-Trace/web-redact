@@ -6,7 +6,7 @@ import mapService from './services/map.service';
 import './App.css';
 import AddPage from './pages/AddPage';
 import ImportPage from './pages/ImportPage';
-import MapPage from './pages/MapPage';
+import LandingPage from './pages/LandingPage';
 import PlacesPage from './pages/PlacesPage';
 import RemovePage from './pages/RemovePage';
 
@@ -35,10 +35,10 @@ function App() {
       <Header />
       <Switch>
         <Route path="/add">
-          <AddPage />
+          <AddPage locations={locations} />
         </Route>
         <Route path="/remove">
-          <RemovePage />
+          <RemovePage locations={locations} />
         </Route>
         <Route path="/import">
           <ImportPage />
@@ -47,7 +47,7 @@ function App() {
           <PlacesPage places={places} />
         </Route>
         <Route path="/:uuid?">
-          <MapPage locations={locations} />
+          <LandingPage />
         </Route>
       </Switch>
     </Router>

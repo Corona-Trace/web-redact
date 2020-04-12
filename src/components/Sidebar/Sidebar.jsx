@@ -1,10 +1,7 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import Location from './Location';
-import Button from '../Button/Button';
-import mapService from '../../services/map.service';
 
 const Box = styled.div`
   border: 1px solid #666;
@@ -31,21 +28,12 @@ const P = styled.p`
   margin: 0 0 8px 0;
 `;
 
-function Sidebar({ history, locations }) {
-  const noneToDelete = locations.filter((l) => l.remove === true).length === 0;
+function Sidebar({ children, locations }) {
   const sorted = locations.sort((a, b) => b.timestampMs - a.timestampMs);
 
   return (
     <Wrapper>
-      <Box>
-        <Button
-          color={'#dd514c'}
-          disabled={noneToDelete}
-          onClick={() => mapService.deleteSelected()}
-        >
-          Delete
-        </Button>
-      </Box>
+      <Box>{children}</Box>
       <Box>
         <LocationContainer>
           <P>{sorted.length} locations </P>
@@ -58,4 +46,4 @@ function Sidebar({ history, locations }) {
   );
 }
 
-export default withRouter(Sidebar);
+export default Sidebar;

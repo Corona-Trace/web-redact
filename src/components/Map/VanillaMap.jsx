@@ -16,7 +16,7 @@ const MapContainer = styled.div`
   width: 100%;
 `;
 
-function Map({ latlng, locations }) {
+function Map({ latlng, locations, mode = 'REMOVE' }) {
   const mapRef = useRef(null);
   const markerGroupRef = useRef(null);
   const [initialLoad, setInitialLoad] = useState(true);
