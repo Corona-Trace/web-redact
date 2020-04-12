@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { IJsonData } from '../interfaces';
 
 /**
@@ -59,7 +61,7 @@ function getTimestampsFromSemanticLocationHistory(locationData, startTimestampMs
         const waypoints = getWaypoints(loc.activitySegment);
         waypoints.forEach((waypoint, widx) => {
           filteredLocations.push({
-            id: `${lidx}_${widx}_${duration.startTimestampMs}`,
+            id: uuidv4(), //`${lidx}_${widx}_${duration.startTimestampMs}`,
             timestampMs: duration.startTimestampMs,
             latitudeE7: waypoint.latE7 / 1e7,
             longitudeE7: waypoint.lngE7 / 1e7,
@@ -82,7 +84,7 @@ function getTimestampsFromSemanticLocationHistory(locationData, startTimestampMs
       if (inTimeFrame) {
         const location = loc.placeVisit.location;
         filteredLocations.push({
-          id: `place_${duration.startTimestampMs}`,
+          id: uuidv4(), //`place_${duration.startTimestampMs}`,
           timestampMs: duration.startTimestampMs,
           latitudeE7: location.latitudeE7 / 1e7,
           longitudeE7: location.longitudeE7 / 1e7,

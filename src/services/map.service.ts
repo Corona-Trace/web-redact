@@ -7,12 +7,25 @@ import placesService from './places.service';
 
 const _locations = new BehaviorSubject<any[]>([]);
 const _places = new BehaviorSubject<any[]>([]);
+let _mapRef;
+let _markerGroupRef;
+let _latlng;
 
 // TODO  needs to be configurable
 const startDate = new Date(2020, 0, 1, 0, 0, 0); // month is zero based
 const endDate = new Date(2020, 3, 30, 0, 0, 0); // month is zero based
 const startTimestampMs = startDate.getTime();
 const endTimestampMs = endDate.getTime();
+
+/** store these items for future use */
+function init(mapRef, latlng) {
+  _mapRef = mapRef;
+  _latlng = latlng;
+}
+
+function setMarkerGroupRef(markerGroupRef) {
+  _markerGroupRef = markerGroupRef;
+}
 
 function loadSavedState() {
   // for now we just load whatever is in localstorage
@@ -41,6 +54,11 @@ function save() {
   if (_places.value.length > 0) {
     localStorageService.setItem('places', _places.value);
   }
+}
+
+function addLocation(loc) {
+  const currentLocations = _locations.value;
+  _locations.next([...currentLocations, loc]);
 }
 
 function addLocations(data) {
@@ -96,15 +114,20 @@ function removeDuplicates(array: any[], key: string) {
 }
 
 const service = {
+  addLocation,
   addLocations,
   addSelected,
   addPlaces,
   deleteSelected,
+  init,
   loadSavedState,
   markForRemoval,
   save,
+  setMarkerGroupRef,
   locations$: _locations.asObservable(),
   places$: _places.asObservable(),
+  getMapRef: () => _mapRef,
+  getMarkerGroupRef: () => _markerGroupRef,
 };
 
 export default service;

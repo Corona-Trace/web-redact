@@ -19,7 +19,7 @@ export default function AddPage({ locations }) {
   const noneToAdd = locations.filter((l) => l.add === true).length === 0;
 
   const button = (
-    <Button color={'#dd514c'} disabled={noneToAdd} onClick={() => mapService.addSelected()}>
+    <Button color={'#5eb95e'} disabled={noneToAdd} onClick={() => mapService.addSelected()}>
       Add
     </Button>
   );

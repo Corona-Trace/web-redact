@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
+import mapService from '../../services/map.service';
+
 import createMap from './createMap';
 import createTimeline from './createTimeline'; // TODO does not work
 import addMarkers from './addMarkers';
@@ -22,12 +24,12 @@ function Map({ latlng, locations, mode = 'REMOVE' }) {
   const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
-    createMap(mapRef, markerGroupRef, latlng);
+    createMap(mapRef, latlng);
   }, []);
 
   useEffect(() => {
     // when we get new locations, add markers
-    const markers = addMarkers(mapRef, markerGroupRef, locations);
+    const markers = addMarkers(markerGroupRef, locations);
 
     // createTimeline(mapRef, locations);
 

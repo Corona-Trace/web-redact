@@ -1,9 +1,13 @@
+import { v4 as uuidv4 } from 'uuid';
+
+// this file is JS because I could not get leaflet to work with TS
 import mapService from '../../services/map.service';
 
 import { addMarker } from './addMarkers';
 
 /*global L*/
-export default (mapRef, markerGroupRef, latlng) => {
+export default (mapRef, latlng) => {
+  mapService.init(mapRef, latlng);
   const drawControl = new L.Control.Draw({
     draw: {
       marker: false,
@@ -34,13 +38,15 @@ export default (mapRef, markerGroupRef, latlng) => {
   function onMapClick(e) {
     // TODO implement add marker
     // TODO only allow this on add page
-    // const mp = new L.Marker([e.latlng.lat, e.latlng.lng]).addTo(mapRef.current);
-    // mp.bindPopup(
-    //   '<a style="cursor:pointer" onclick=\'removeMarker("' +
-    //     mp._leaflet_id +
-    //     '")\'>{{ i18n "remove" }}</a>',
-    // );
-    // markers[mp._leaflet_id] = mp;
+    const location = {
+      id: uuidv4(),
+      add: true,
+      timestampMs: new Date(),
+      latitudeE7: e.latlng.lat,
+      longitudeE7: e.latlng.lng,
+    };
+    addMarker(mapService.getMarkerGroupRef(), location);
+    mapService.addLocation(location);
   }
 
   mapRef.current = L.map('map', {
@@ -59,6 +65,7 @@ export default (mapRef, markerGroupRef, latlng) => {
    * This handles the user selecting an area on the map
    */
   mapRef.current.on(L.Draw.Event.CREATED, (e) => {
+    const markerGroupRef = mapService.getMarkerGroupRef();
     const locationIdsToRemove = [];
     markerGroupRef.current.eachLayer(function (marker) {
       if (e.layer.contains(marker.getLatLng())) {
