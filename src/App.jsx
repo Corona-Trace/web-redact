@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+import { updateTimeline } from './components/Map/createTimeline';
 
 import Header from './components/Header/Header';
 import mapService from './services/map.service';
@@ -17,8 +19,14 @@ function App() {
   useEffect(() => {
     // listen for new locations, they will arrive here when we load a file
     mapService.locations$.subscribe((locations) => {
+      if (locations.length > 0) {
+        updateTimeline(locations);
+        mapService.save();
+      }
+    });
+
+    mapService.visibleLocations$.subscribe((locations) => {
       setLocations(locations);
-      mapService.save();
     });
 
     mapService.places$.subscribe((places) => {

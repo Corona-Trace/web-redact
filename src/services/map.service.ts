@@ -5,12 +5,16 @@ import locationService from './location.service';
 import localStorageService from './localStorage.service';
 import placesService from './places.service';
 
+// master list of locations as loaded from GTO / added on map
 const _locations = new BehaviorSubject<any[]>([]);
+// list of locations visibile based on current timeline
+const _visibleLocations = new BehaviorSubject<any[]>([]);
 const _places = new BehaviorSubject<any[]>([]);
 let _mapRef;
 let _markerGroupRef;
 let _latlng;
 let _sliderControl;
+let _timeline;
 
 // TODO  needs to be configurable
 const startDate = new Date(2020, 0, 1, 0, 0, 0); // month is zero based
@@ -42,7 +46,6 @@ function loadSavedState() {
 }
 
 function filterLocationsByTime(locations) {
-  // TODO update markers on the map
   if (locations.length > 0) {
     console.log(locations);
   }
@@ -59,7 +62,7 @@ function filterLocationsByTime(locations) {
       visible: visibleIds.includes(location.id),
     };
   });
-  _locations.next(visibleLocations);
+  _visibleLocations.next(visibleLocations);
 }
 
 /**
@@ -98,6 +101,7 @@ function addPlaces(data) {
 function markForRemoval(ids) {
   const updateLocations = _locations.value;
 
+  //TODO use a map!
   ids.forEach((idToRemove) => {
     const index = updateLocations.findIndex((c: any) => c.id === idToRemove);
     if (index > -1) {
@@ -148,11 +152,16 @@ const service = {
   setSliderControl: (sliderControl) => {
     _sliderControl = sliderControl;
   },
+  setTimeline: (timeline) => {
+    _timeline = timeline;
+  },
   locations$: _locations.asObservable(),
+  visibleLocations$: _visibleLocations.asObservable(),
   places$: _places.asObservable(),
   getMapRef: () => _mapRef,
   getMarkerGroupRef: () => _markerGroupRef,
   getSliderControl: () => _sliderControl,
+  getTimeline: () => _timeline,
 };
 
 export default service;

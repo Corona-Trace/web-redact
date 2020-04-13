@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
-import mapService from '../../services/map.service';
-
 import createMap from './createMap';
-import createTimeline from './createTimeline'; // TODO does not work
+import { createTimeline } from './createTimeline';
 import addMarkers from './addMarkers';
 
 // TODO
@@ -26,6 +24,7 @@ function Map({ latlng, locations, mode = 'REMOVE' }) {
   useEffect(() => {
     // this effect initialiases the map
     createMap(mapRef, latlng);
+    createTimeline(mapRef, []);
   }, []);
 
   useEffect(() => {
@@ -33,8 +32,6 @@ function Map({ latlng, locations, mode = 'REMOVE' }) {
     const visibleLocations = locations.filter((l) => l.visible);
 
     const markers = addMarkers(markerGroupRef, visibleLocations);
-
-    createTimeline(mapRef, locations);
 
     // TODO make this smarter, pan to center of markers
     if (initialLoad) {

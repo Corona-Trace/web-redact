@@ -56,11 +56,7 @@ When the app is loaded, we check local storage for data and load any found.
 
 # TODO
 
-- get timeline working
-
-  - only show markers for current time
-  - when addming markers, use current time
-
+- complete saving of added markers
 - make it possible to delete locations by deleting places?
 - make responsive
 - use same Map for Add/Remove?
