@@ -133,6 +133,18 @@ function addSelected() {
   _locations.next(markAsAdded);
 }
 
+function exportLocations() {
+  const locationToExport = _locations.value.filter((l) => !(l.deleted || l.remove || l.add));
+  const dataStr =
+    'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(locationToExport));
+  const downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute('href', dataStr);
+  downloadAnchorNode.setAttribute('download', 'locations.json');
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
+
 function removeDuplicates(array: any[], key: string) {
   // each place/location gets a unique ID when we extract it, use this
   return array.filter((v, i, a) => a.findIndex((t) => t[key] === v[key]) === i);
@@ -144,6 +156,7 @@ const service = {
   addSelected,
   addPlaces,
   deleteSelected,
+  exportLocations,
   filterLocationsByTime,
   init,
   loadSavedState,
