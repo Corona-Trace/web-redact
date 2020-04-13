@@ -58,6 +58,7 @@ When the app is loaded, we check local storage for data and load any found.
 
 # TODO
 
+- set map to users location (or to GTO location)
 - when map first loaded, no makers shown for initial time..
 - make it possible to delete locations by deleting places?
 - make responsive

@@ -10,7 +10,7 @@ const Container = styled.div`
   display: flex;
 `;
 
-export default function RemovePage({ locations }) {
+export default function RemovePage({ allLocations, locations }) {
   useEffect(() => {
     // for now always load saved state, in the future only do this if user is visiting their own URL?
     mapService.loadSavedState();
@@ -27,7 +27,9 @@ export default function RemovePage({ locations }) {
   return (
     <Container>
       <Map latlng={{ lat: -41.284946, lng: 173.1960541 }} locations={locations} />
-      <Sidebar locations={locations}>{button}</Sidebar>
+      <Sidebar allLocations={allLocations} locations={locations}>
+        {button}
+      </Sidebar>
     </Container>
   );
 }

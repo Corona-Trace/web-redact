@@ -13,7 +13,8 @@ import PlacesPage from './pages/PlacesPage';
 import RemovePage from './pages/RemovePage';
 
 function App() {
-  const [locations, setLocations] = useState([]);
+  const [allLocations, setAllLocations] = useState([]);
+  const [visibleLocations, setVisibleLocations] = useState([]);
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
@@ -21,12 +22,12 @@ function App() {
     mapService.locations$.subscribe((locations) => {
       if (locations.length > 0) {
         updateTimeline(locations);
-        mapService.save();
+        setAllLocations(locations);
       }
     });
 
     mapService.visibleLocations$.subscribe((locations) => {
-      setLocations(locations);
+      setVisibleLocations(locations);
     });
 
     mapService.places$.subscribe((places) => {
@@ -43,10 +44,10 @@ function App() {
       <Header />
       <Switch>
         <Route path="/add">
-          <AddPage locations={locations} />
+          <AddPage locations={visibleLocations} allLocations={allLocations} />
         </Route>
         <Route path="/remove">
-          <RemovePage locations={locations} />
+          <RemovePage locations={visibleLocations} allLocations={allLocations} />
         </Route>
         <Route path="/import">
           <ImportPage />

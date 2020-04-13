@@ -10,6 +10,7 @@ const _locations = new BehaviorSubject<any[]>([]);
 // list of locations visibile based on current timeline
 const _visibleLocations = new BehaviorSubject<any[]>([]);
 const _places = new BehaviorSubject<any[]>([]);
+
 let _mapRef;
 let _markerGroupRef;
 let _latlng;
@@ -46,22 +47,14 @@ function loadSavedState() {
 }
 
 function filterLocationsByTime(locations) {
-  if (locations.length > 0) {
-    console.log(locations);
-  }
-
   const visibleIds = locations.map((location) => {
     return location.feature.properties.id;
   });
 
   const currentLocations = _locations.value;
 
-  const visibleLocations = currentLocations.map((location) => {
-    return {
-      ...location,
-      visible: visibleIds.includes(location.id),
-    };
-  });
+  const visibleLocations = currentLocations.filter((location) => visibleIds.includes(location.id));
+
   _visibleLocations.next(visibleLocations);
 }
 

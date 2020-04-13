@@ -28,11 +28,10 @@ const P = styled.p`
   margin: 0 0 8px 0;
 `;
 
-function Sidebar({ children, locations }) {
-  const visibleLocations = locations.filter((l) => l.visible);
-  const sorted = visibleLocations.sort((a, b) => b.timestampMs - a.timestampMs);
+function Sidebar({ allLocations, children, locations }) {
+  const sorted = locations.sort((a, b) => b.timestampMs - a.timestampMs);
 
-  const totalCount = locations.length;
+  const totalCount = allLocations.length;
   const visibleCount = sorted.length;
 
   return (
