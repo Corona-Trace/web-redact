@@ -31,7 +31,7 @@ const P = styled.p`
 function Sidebar({ allLocations, children, locations, showAll }) {
   const sorted = locations.sort((a, b) => b.timestampMs - a.timestampMs);
 
-  const totalCount = allLocations.length;
+  const totalCount = allLocations.filter((l) => !l.removed).length;
   const deletedCount = allLocations.filter((l) => l.removed).length;
   const addedCount = allLocations.filter((l) => l.added).length;
   const visibleCount = sorted.length;

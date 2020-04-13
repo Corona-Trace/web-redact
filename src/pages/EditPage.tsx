@@ -16,6 +16,11 @@ export default function EditPage({ allLocations, locations, showAll }) {
     mapService.loadSavedState();
   }, []);
 
+  const doExport = () => {
+    mapService.exportLocations();
+    mapService.save();
+  };
+
   const noneToDelete = locations.filter((l) => l.remove === true).length === 0;
   const noneToAdd = locations.filter((l) => l.add === true).length === 0;
 
@@ -32,7 +37,7 @@ export default function EditPage({ allLocations, locations, showAll }) {
   );
 
   const saveButton = (
-    <Button color={'#5eb95e'} onClick={() => mapService.exportLocations()}>
+    <Button color={'#5eb95e'} onClick={doExport}>
       Save
     </Button>
   );
