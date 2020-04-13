@@ -6,22 +6,31 @@ import { updateTimeline } from './components/Map/createTimeline';
 import Header from './components/Header/Header';
 import mapService from './services/map.service';
 import './App.css';
-import AddPage from './pages/AddPage';
-import ImportPage from './pages/ImportPage';
+import EditPage from './pages/EditPage';
 import LandingPage from './pages/LandingPage';
 import PlacesPage from './pages/PlacesPage';
-import RemovePage from './pages/RemovePage';
 
 function App() {
+  const [showAll, setShowAll] = useState(true);
   const [allLocations, setAllLocations] = useState([]);
   const [visibleLocations, setVisibleLocations] = useState([]);
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
+    mapService.showAll$.subscribe((showAll) => {
+      setShowAll(showAll);
+    });
+
     // listen for new locations, they will arrive here when we load a file
+    // or when locations are added / removed etc
     mapService.locations$.subscribe((locations) => {
       if (locations.length > 0) {
-        updateTimeline(locations);
+        if (!showAll) {
+          updateTimeline(locations);
+        } else {
+          setVisibleLocations(locations);
+        }
+        console.log(`allocations = ${locations.length}`);
         setAllLocations(locations);
       }
     });
@@ -43,15 +52,15 @@ function App() {
     <Router>
       <Header />
       <Switch>
-        <Route path="/add">
-          <AddPage locations={visibleLocations} allLocations={allLocations} />
+        <Route path="/edit">
+          <EditPage locations={visibleLocations} allLocations={allLocations} showAll={showAll} />
         </Route>
-        <Route path="/remove">
+        {/* <Route path="/remove">
           <RemovePage locations={visibleLocations} allLocations={allLocations} />
         </Route>
         <Route path="/import">
           <ImportPage />
-        </Route>
+        </Route> */}
         <Route path="/places">
           <PlacesPage places={places} />
         </Route>

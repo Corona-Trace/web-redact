@@ -10,25 +10,51 @@ const Container = styled.div`
   display: flex;
 `;
 
-export default function AddPage({ allLocations, locations, showAll }) {
+export default function EditPage({ allLocations, locations, showAll }) {
   useEffect(() => {
     // for now always load saved state, in the future only do this if user is visiting their own URL?
     mapService.loadSavedState();
   }, []);
 
+  const doExport = () => {
+    mapService.exportLocations();
+    mapService.save();
+  };
+
+  const noneToDelete = locations.filter((l) => l.remove === true).length === 0;
   const noneToAdd = locations.filter((l) => l.add === true).length === 0;
 
-  const button = (
+  const removeButton = (
+    <Button color={'#dd514c'} disabled={noneToDelete} onClick={() => mapService.deleteSelected()}>
+      Delete
+    </Button>
+  );
+
+  const addButton = (
     <Button color={'#5eb95e'} disabled={noneToAdd} onClick={() => mapService.addSelected()}>
       Add
     </Button>
   );
 
+  const saveButton = (
+    <Button color={'#5eb95e'} onClick={doExport}>
+      Save
+    </Button>
+  );
+
+  const withoutRemoved = locations.filter((l) => !l.removed);
+
   return (
     <Container>
-      <Map latlng={{ lat: -41.284946, lng: 173.1960541 }} locations={locations} showAll={showAll} />
+      <Map
+        latlng={{ lat: -41.284946, lng: 173.1960541 }}
+        locations={withoutRemoved}
+        showAll={showAll}
+      />
       <Sidebar allLocations={allLocations} locations={locations} showAll={showAll}>
-        {button}
+        {addButton}
+        {removeButton}
+        {saveButton}
       </Sidebar>
     </Container>
   );

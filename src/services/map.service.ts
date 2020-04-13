@@ -10,6 +10,7 @@ const _locations = new BehaviorSubject<any[]>([]);
 // list of locations visibile based on current timeline
 const _visibleLocations = new BehaviorSubject<any[]>([]);
 const _places = new BehaviorSubject<any[]>([]);
+const _showAll = new BehaviorSubject<boolean>(true);
 
 let _mapRef;
 let _markerGroupRef;
@@ -109,8 +110,17 @@ function markForRemoval(ids) {
  */
 function deleteSelected() {
   const currentLocations = _locations.value;
-  const withoutDeleted = currentLocations.filter((l: any) => l.remove !== true);
-  _locations.next(withoutDeleted);
+  const markAsDeleted = currentLocations.map((location) => {
+    if (location.remove) {
+      return {
+        ...location,
+        remove: false,
+        removed: true,
+      };
+    }
+    return location;
+  });
+  _locations.next(markAsDeleted);
 }
 
 /**
@@ -126,11 +136,30 @@ function addSelected() {
       return {
         ...location,
         add: false,
+        added: true,
       };
     }
     return location;
   });
   _locations.next(markAsAdded);
+}
+
+function exportLocations() {
+  const locationToExport = _locations.value.filter((l) => !(l.deleted || l.remove || l.add));
+  const dataStr =
+    'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(locationToExport));
+  const downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute('href', dataStr);
+  downloadAnchorNode.setAttribute('download', 'locations.json');
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
+
+function toggleShowAll() {
+  _showAll.next(!_showAll.value);
+  // force location to update after timeline removed
+  _locations.next([..._locations.value]);
 }
 
 function removeDuplicates(array: any[], key: string) {
@@ -144,6 +173,7 @@ const service = {
   addSelected,
   addPlaces,
   deleteSelected,
+  exportLocations,
   filterLocationsByTime,
   init,
   loadSavedState,
@@ -158,13 +188,16 @@ const service = {
   setTimeline: (timeline) => {
     _timeline = timeline;
   },
+  toggleShowAll,
   locations$: _locations.asObservable(),
   visibleLocations$: _visibleLocations.asObservable(),
   places$: _places.asObservable(),
+  showAll$: _showAll.asObservable(),
   getMapRef: () => _mapRef,
   getMarkerGroupRef: () => _markerGroupRef,
   getSliderControl: () => _sliderControl,
   getTimeline: () => _timeline,
+  getShowAll: () => _showAll.value,
 };
 
 export default service;

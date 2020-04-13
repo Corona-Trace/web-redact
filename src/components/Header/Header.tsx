@@ -40,12 +40,13 @@ function Header() {
   return (
     <Wrapper>
       <LinkButton to="/" exact>
-        Corona Trace
+        Location Redactor
       </LinkButton>
       <ButtonContainer>
-        <LinkButton to="/add">Add</LinkButton>
-        <LinkButton to="/remove">Remove</LinkButton>
-        <LinkButton to="/import">Import</LinkButton>
+        <LinkButton to="/" exact>
+          Home
+        </LinkButton>
+        <LinkButton to="/edit">Edit</LinkButton>
         <LinkButton to="/places">Places</LinkButton>
       </ButtonContainer>
       <div>

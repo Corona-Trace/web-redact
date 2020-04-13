@@ -61,16 +61,26 @@ export default (mapRef, latlng) => {
   }
 
   function onMapClick(e) {
-    if (isSliderClick(e) || isMarkerClick(e)) {
+    if (isSliderClick(e)) {
+      return;
+    }
+    if (isMarkerClick(e)) {
+      // TODO remove this marker
+      //console.log(e);
       return;
     }
     const slider = mapService.getSliderControl();
+
+    let time = Date.now();
+    if (slider) {
+      time = slider.time;
+    }
 
     // TODO only allow this on add page
     const location = {
       id: uuidv4(),
       add: true,
-      timestampMs: slider.time,
+      timestampMs: time,
       latitudeE7: e.latlng.lat,
       longitudeE7: e.latlng.lng,
     };
