@@ -10,7 +10,7 @@ const Container = styled.div`
   display: flex;
 `;
 
-export default function EditPage({ allLocations, locations }) {
+export default function EditPage({ allLocations, locations, showAll }) {
   useEffect(() => {
     // for now always load saved state, in the future only do this if user is visiting their own URL?
     mapService.loadSavedState();
@@ -37,10 +37,16 @@ export default function EditPage({ allLocations, locations }) {
     </Button>
   );
 
+  const withoutRemoved = locations.filter((l) => !l.removed);
+
   return (
     <Container>
-      <Map latlng={{ lat: -41.284946, lng: 173.1960541 }} locations={locations} />
-      <Sidebar allLocations={allLocations} locations={locations}>
+      <Map
+        latlng={{ lat: -41.284946, lng: 173.1960541 }}
+        locations={withoutRemoved}
+        showAll={showAll}
+      />
+      <Sidebar allLocations={allLocations} locations={locations} showAll={showAll}>
         {addButton}
         {removeButton}
         {saveButton}

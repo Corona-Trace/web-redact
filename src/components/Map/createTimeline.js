@@ -14,6 +14,20 @@ function createTimeline(mapRef) {
   }
 }
 
+function removeTimeline(mapRef) {
+  const slider = mapService.getSliderControl();
+  const timeline = mapService.getTimeline();
+
+  if (timeline) {
+    timeline.removeFrom(mapRef.current);
+    mapService.setTimeline(null);
+  }
+  if (slider) {
+    mapRef.current.removeControl(slider);
+    mapService.setSliderControl(null);
+  }
+}
+
 /**
  * It does not appear possible to add data to an existing timeline.
  * Also  slider intervals are set when timeline added to it,
@@ -46,7 +60,10 @@ function updateTimeline(locations) {
   });
 
   slider.addTimelines(newTimeline);
-  slider.setTime(currentSliderPosition);
+  if (currentSliderPosition) {
+    slider.setTime(currentSliderPosition);
+  }
+
   mapService.setTimeline(newTimeline);
 }
 
@@ -83,4 +100,4 @@ function getInterval(data) {
     end: data.properties.end,
   };
 }
-export { createTimeline, updateTimeline };
+export { createTimeline, removeTimeline, updateTimeline };

@@ -68,13 +68,13 @@ export default function LandingPage() {
 
           <P>1) Download your Google Take Out Location History</P>
           <P>2) Import monthly files using the IMPORT GOOGLE TAKE OUT Button</P>
-          <P>3) Drag the slider to view where you were on each day</P>
           <P>
-            4) Use the Circle / Square map tool to select locations to remove - click DELETE to
+            3) Use the Circle / Square map tool to select locations to remove - click DELETE to
             confirm removal
           </P>
-          <P>5) Click the map to add locations - click ADD to confirm addition</P>
-          <P>6) Click SAVE to download list of locations</P>
+          <P>4) Click the map to add locations - click ADD to confirm addition</P>
+          <P>5) Click SAVE to download list of locations</P>
+          <P>Note: You can use the timeline to view where you were on a particular date</P>
 
           <h3></h3>
         </div>

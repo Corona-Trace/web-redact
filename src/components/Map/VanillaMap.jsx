@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
 import createMap from './createMap';
-import { createTimeline } from './createTimeline';
+import { createTimeline, removeTimeline, updateTimeline } from './createTimeline';
 import addMarkers from './addMarkers';
+import ShowAllButton from './ShowAllButton';
 
 const MapContainer = styled.div`
   display: flex;
@@ -11,7 +12,7 @@ const MapContainer = styled.div`
   width: 100%;
 `;
 
-function Map({ latlng, locations }) {
+function Map({ latlng, locations, showAll }) {
   const mapRef = useRef(null);
   const markerGroupRef = useRef(null);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -19,8 +20,17 @@ function Map({ latlng, locations }) {
   useEffect(() => {
     // this effect initialiases the map
     createMap(mapRef, latlng);
-    createTimeline(mapRef, []);
   }, []);
+
+  useEffect(() => {
+    // this effect initialiases the timeline
+    if (showAll) {
+      removeTimeline(mapRef);
+    } else {
+      createTimeline(mapRef, []);
+      updateTimeline(locations);
+    }
+  }, [showAll]);
 
   useEffect(() => {
     // this effect responds to the loading of new locations
@@ -38,6 +48,7 @@ function Map({ latlng, locations }) {
 
   return (
     <MapContainer>
+      <ShowAllButton />
       <div id="map" />
     </MapContainer>
   );

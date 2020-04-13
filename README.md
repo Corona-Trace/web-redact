@@ -58,6 +58,8 @@ When the app is loaded, we check local storage for data and load any found.
 
 # TODO
 
+- click marker to delete
+- when page is refreshed (first loaded?) slider starts with UNIX start timestamp
 - set map to users location (or to GTO location)
 - when map first loaded, no makers shown for initial time..
 - make it possible to delete locations by deleting places?

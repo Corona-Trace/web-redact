@@ -28,10 +28,12 @@ const P = styled.p`
   margin: 0 0 8px 0;
 `;
 
-function Sidebar({ allLocations, children, locations }) {
+function Sidebar({ allLocations, children, locations, showAll }) {
   const sorted = locations.sort((a, b) => b.timestampMs - a.timestampMs);
 
   const totalCount = allLocations.length;
+  const deletedCount = allLocations.filter((l) => l.removed).length;
+  const addedCount = allLocations.filter((l) => l.added).length;
   const visibleCount = sorted.length;
 
   return (
@@ -40,7 +42,9 @@ function Sidebar({ allLocations, children, locations }) {
       <Box>
         <LocationContainer>
           <P>Total locations ({totalCount}) </P>
-          <P>Current locations ({visibleCount}) </P>
+          <P>Deleted locations ({deletedCount}) </P>
+          <P>Added locations ({addedCount}) </P>
+          {!showAll && <P>Current locations ({visibleCount}) </P>}
           {sorted.map((location, idx) => (
             <Location key={idx} location={location} />
           ))}

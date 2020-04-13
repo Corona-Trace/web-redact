@@ -11,15 +11,26 @@ import LandingPage from './pages/LandingPage';
 import PlacesPage from './pages/PlacesPage';
 
 function App() {
+  const [showAll, setShowAll] = useState(true);
   const [allLocations, setAllLocations] = useState([]);
   const [visibleLocations, setVisibleLocations] = useState([]);
   const [places, setPlaces] = useState([]);
 
   useEffect(() => {
+    mapService.showAll$.subscribe((showAll) => {
+      setShowAll(showAll);
+    });
+
     // listen for new locations, they will arrive here when we load a file
+    // or when locations are added / removed etc
     mapService.locations$.subscribe((locations) => {
       if (locations.length > 0) {
-        updateTimeline(locations);
+        if (!showAll) {
+          updateTimeline(locations);
+        } else {
+          setVisibleLocations(locations);
+        }
+        console.log(`allocations = ${locations.length}`);
         setAllLocations(locations);
       }
     });
@@ -42,7 +53,7 @@ function App() {
       <Header />
       <Switch>
         <Route path="/edit">
-          <EditPage locations={visibleLocations} allLocations={allLocations} />
+          <EditPage locations={visibleLocations} allLocations={allLocations} showAll={showAll} />
         </Route>
         {/* <Route path="/remove">
           <RemovePage locations={visibleLocations} allLocations={allLocations} />
