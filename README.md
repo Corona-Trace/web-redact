@@ -5,6 +5,8 @@ Built with [Create React App](CRA.md), React Hooks, RxJS and Leaflet.
 Leaflet are included as script / style tags in head in `index.html`.
 I've used this approach as I had some issues getting Leaflet to work when I tried import npm installed modules.
 
+Inspired by initial work done by [Tiago Ferreira & Wolfgang Gassler](https://github.com/covid19tracing/covid-19-tracing).
+
 # Google Take Out Data
 
 For many people the default Google Take Out Data will be huge - mine for example is 130MB for 4 years of data.
@@ -56,7 +58,7 @@ When the app is loaded, we check local storage for data and load any found.
 
 # TODO
 
-- complete saving of added markers
+- when map first loaded, no makers shown for initial time..
 - make it possible to delete locations by deleting places?
 - make responsive
 - use same Map for Add/Remove?

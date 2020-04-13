@@ -99,17 +99,15 @@ function addPlaces(data) {
 }
 
 function markForRemoval(ids) {
-  const updateLocations = _locations.value;
+  const currentLocations = _locations.value;
 
-  //TODO use a map!
-  ids.forEach((idToRemove) => {
-    const index = updateLocations.findIndex((c: any) => c.id === idToRemove);
-    if (index > -1) {
-      //@ts-ignore
-      updateLocations[index].remove = true;
-    }
+  const markedForRemoval = currentLocations.map((location) => {
+    return {
+      ...location,
+      remove: ids.includes(location.id),
+    };
   });
-  _locations.next([...updateLocations]);
+  _locations.next(markedForRemoval);
 }
 
 /**
@@ -127,7 +125,19 @@ function deleteSelected() {
  * These items will be saved
  */
 function addSelected() {
+  // for now we just remove the added flag so that the locations no longer appear new
   const currentLocations = _locations.value;
+
+  const markAsAdded = currentLocations.map((location) => {
+    if (location.add) {
+      return {
+        ...location,
+        add: false,
+      };
+    }
+    return location;
+  });
+  _locations.next(markAsAdded);
 }
 
 function removeDuplicates(array: any[], key: string) {
